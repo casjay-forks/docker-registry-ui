@@ -11,3 +11,5 @@ tmp/*
 .env
 .yarnrc
 
+# ignore commit message
+.gitcommit
