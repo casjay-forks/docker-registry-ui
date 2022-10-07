@@ -1,9 +1,0 @@
-#!/bin/bash
-
-sudo docker run --rm -it \
-  -p 8124:8080 \
-  -v $(pwd):/app \
-  -w /app \
-  jc21/node:latest npm run-script watch
-
-exit $?
