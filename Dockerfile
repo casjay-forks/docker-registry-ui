@@ -24,10 +24,7 @@ RUN mkdir -p /bin/ /config/ /data/ && \
   rm -Rf /bin/.gitkeep /config/.gitkeep /data/.gitkeep
 
 WORKDIR /app
-ADD dist                /app/dist
-ADD LICENSE.md          /app/LICENSE
-ADD package.json        /app/package.json
-ADD src/backend         /app/src/backend
+COPY ./. /app/
 
 RUN eval "$(fnm env --shell bash)" && \
   fnm install $NODE_VERSION && \
