@@ -27,7 +27,7 @@ ADD ./LICENSE.md /app/
 
 RUN mkdir -p /bin/ /config/ /data/ && \
   rm -Rf /bin/.gitkeep /config/.gitkeep /data/.gitkeep && \
-  entrypoint-nodejs.sh exit
+  setup_node "$NODE_VERSION"
 
 RUN eval "$(fnm env --shell bash)" && \
   fnm install $NODE_VERSION && \
