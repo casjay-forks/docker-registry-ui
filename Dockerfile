@@ -12,9 +12,11 @@ ENV SHELL=/bin/bash \
   HOSTNAME=${HOSTNAME:-casjaysdev-$IMAGE_NAME} \
   TZ=$TIMEZONE \
   NODE_ENV=$NODE_ENV \
+  NODE_MANAGER="fnm" \
   NODE_VERSION=8
 
-RUN apk update -U --no-cache
+RUN apk update -U --no-cache && \
+  
 
 COPY ./bin/. /usr/local/bin/
 COPY ./config/. /config/
