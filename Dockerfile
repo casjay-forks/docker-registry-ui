@@ -1,16 +1,18 @@
-FROM casjaysdevdocker/alpine:latest as build
+FROM casjaysdevdocker/nodejs as build
 
 ARG LICENSE="WTFPL" \
   IMAGE_NAME="docker-registry-ui" \
   TIMEZONE="America/New_York" \
   LICENSE="MIT" \
-  NODE_ENV=production \
+  NODE_ENV="production" \
   PORT="80"
 
 ENV SHELL=/bin/bash \
   TERM=xterm-256color \
   HOSTNAME=${HOSTNAME:-casjaysdev-$IMAGE_NAME} \
-  TZ=$TIMEZONE
+  TZ=$TIMEZONE \
+  NODE_ENV=$NODE_ENV \
+  NODE_VERSION=8
 
 RUN apk update -U --no-cache
 
@@ -21,20 +23,30 @@ COPY ./data/. /data/
 RUN mkdir -p /bin/ /config/ /data/ && \
   rm -Rf /bin/.gitkeep /config/.gitkeep /data/.gitkeep
 
+WORKDIR /app
+ADD dist                /app/dist
+ADD LICENSE.md          /app/LICENSE
+ADD package.json        /app/package.json
+ADD src/backend         /app/src/backend
+
+RUN eval "$(fnm env --shell bash)" && \
+  fnm install $NODE_VERSION && \
+  npm i
+
 FROM scratch
-ARG BUILD_DATE="2022-10-07 19:46" \
+ARG BUILD_DATE="2022-10-07 20:08" \
   BUILD_VERSION="latest"
 
 LABEL org.label-schema.name="docker-registry-ui" \
   org.label-schema.description="Containerized version of docker-registry-ui" \
   org.label-schema.url="https://hub.docker.com/r/casjaysdevdocker/docker-registry-ui" \
   org.label-schema.vcs-url="https://github.com/casjaysdevdocker/docker-registry-ui" \
-  org.label-schema.build-date="#BUILD_VERSION" \
-  org.label-schema.version="" \
-  org.label-schema.vcs-ref="" \
-  org.label-schema.license="" \
+  org.label-schema.build-date="$BUILD_VERSION" \
+  org.label-schema.version="$BUILD_VERSION" \
+  org.label-schema.vcs-ref="$BUILD_VERSION" \
+  org.label-schema.license="$LICENSE" \
   org.label-schema.vcs-type="Git" \
-  org.label-schema.schema-version="" \
+  org.label-schema.schema-version="$BUILD_VERSION" \
   org.label-schema.vendor="CasjaysDev" \
   maintainer="CasjaysDev <docker-admin@casjaysdev.com>"
 
@@ -43,9 +55,7 @@ ENV SHELL="/bin/bash" \
   HOSTNAME="casjaysdev-docker-registry-ui" \
   TZ="${TZ:-America/New_York}"
 
-WORKDIR /root
-
-VOLUME ["/root","/config","/data"]
+VOLUME ["/config","/data"]
 
 EXPOSE $PORT
 
