@@ -15,19 +15,19 @@ ENV SHELL=/bin/bash \
   NODE_MANAGER="fnm" \
   NODE_VERSION=8
 
-RUN apk update -U --no-cache && \
-  
+RUN apk update -U --no-cache
 
 COPY ./bin/. /usr/local/bin/
 COPY ./config/. /config/
 COPY ./data/. /data/
 
-RUN mkdir -p /bin/ /config/ /data/ && \
-  rm -Rf /bin/.gitkeep /config/.gitkeep /data/.gitkeep
-
 WORKDIR /app
-COPY ./app/ /app/
+COPY ./app/. /app/
 ADD ./LICENSE.md /app/
+
+RUN mkdir -p /bin/ /config/ /data/ && \
+  rm -Rf /bin/.gitkeep /config/.gitkeep /data/.gitkeep && \
+  entrypoint-nodejs.sh exit
 
 RUN eval "$(fnm env --shell bash)" && \
   fnm install $NODE_VERSION && \
