@@ -48,7 +48,7 @@ LABEL org.label-schema.name="docker-registry-ui" \
   org.label-schema.vcs-type="Git" \
   org.label-schema.schema-version="$BUILD_VERSION" \
   org.label-schema.vendor="CasjaysDev" \
-  maintainer="CasjaysDev <docker-admin@casjaysdev.com>"
+  maintainer="CasjaysDev <docker-admin@casjaysdev.pro>"
 
 ENV SHELL="/bin/bash" \
   TERM="xterm-256color" \
